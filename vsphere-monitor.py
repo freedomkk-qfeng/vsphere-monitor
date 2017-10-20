@@ -107,7 +107,7 @@ def HostInformation(host,datacenter_name,computeResource_name,content,perf_dict,
         stats = summary.quickStats
         hardware = host.hardware
 
-        tags = "datacenter=" + datacenter_name + ",Cluster_name=" + computeResource_name + ",host=" + host.name
+        tags = "datacenter=" + datacenter_name + ",cluster_name=" + computeResource_name + ",host=" + host.name
 
         uptime = stats.uptime
         add_data("esxi.uptime",uptime,"GAUGE",tags)
@@ -128,11 +128,11 @@ def HostInformation(host,datacenter_name,computeResource_name,content,perf_dict,
 
         statNetworkTx = BuildQuery(content, vchtime, (perf_id(perf_dict, 'net.transmitted.average')), "", host, interval)       
         networkTx = (float(sum(statNetworkTx[0].value[0].value) * 8 * 1024) / statInt)
-        add_data("esxi.if.out",networkTx,"GAUGE",tags)
+        add_data("esxi.net.if.out",networkTx,"GAUGE",tags)
         
         statNetworkRx = BuildQuery(content, vchtime, (perf_id(perf_dict, 'net.received.average')), "", host, interval)
         networkRx = (float(sum(statNetworkRx[0].value[0].value) * 8 * 1024) / statInt)
-        add_data("esxi.if.in",networkRx,"GAUGE",tags)
+        add_data("esxi.net.if.in",networkRx,"GAUGE",tags)
 
         add_data("esxi.alive",1,"GAUGE",tags)
 

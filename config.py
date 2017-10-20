@@ -1,3 +1,4 @@
+#coding=utf-8 
 # falcon
 endpoint = "vcenter" # 上报给 open-falcon 的 endpoint
 push_api = "http://127.0.0.1:6060/api/push" # 上报的 http api 接口
