@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8 
 
-import pyVmomi
 import atexit
 from pyVmomi import vim, vmodl
 from pyVim.connect import SmartConnectNoSSL, Disconnect
