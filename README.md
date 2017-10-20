@@ -11,14 +11,14 @@ python 2.7
 datastore.capacity|datacetner=datacenter,datastore=datastore,type=type|GAUGE| 存储容量
 datastore.free|datacetner=datacenter,datastore=datastore,type=type|GAUGE| 存储剩余容量
 datastore.freePercent|datacetner=datacenter,datastore=datastore,type=type|GAUGE| 存储剩余容量
-esxi.alive|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 存活，值为 1，可以用来做 Nodata
-esxi.net.if.in|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 网络进流量（所有网卡总和）
-esxi.net.if.out|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 网络出流量（所有网卡总和）
-esxi.memory.freePercent|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 剩余内存百分比
-esxi.memory.usage|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 内存使用量
-esxi.memory.capacity|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi 内存总量
-esxi.cpu.usage|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi CPU 使用率
-esxi.uptime|datacetner=datacenter，Cluster_name=Cluster_name，host=host|GAUGE|esxi uptime
+esxi.alive|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 存活，值为 1，可以用来做 Nodata
+esxi.net.if.in|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 网络进流量（所有网卡总和）
+esxi.net.if.out|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 网络出流量（所有网卡总和）
+esxi.memory.freePercent|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 剩余内存百分比
+esxi.memory.usage|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 内存使用量
+esxi.memory.capacity|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi 内存总量
+esxi.cpu.usage|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi CPU 使用率
+esxi.uptime|datacetner=datacenter，cluster_name=cluster_name，host=host|GAUGE|esxi uptime
 vm.power|vm=vm_name|GAUGE|虚机是否开机，开机 = 1，关机 = 0，可以用来做 nodata
 vm.net.if.in|vm=vm_name|GAUGE|虚机网络进流量（所有网卡总和）
 vm.net.if.out|vm=vm_name|GAUGE|虚机网络出流量（所有网卡总和）
