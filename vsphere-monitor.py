@@ -140,6 +140,9 @@ def HostInformation(host,datacenter_name,computeResource_name,content,perf_dict,
         print error
         pass
 
+def perf_id(perf_dict, counter_name):
+    counter_key = perf_dict[counter_name]
+    return counter_key
 
 def ComputeResourceInformation(computeResource,datacenter_name,content,perf_dict,vchtime,interval):
     try:
@@ -153,11 +156,6 @@ def ComputeResourceInformation(computeResource,datacenter_name,content,perf_dict
         computeResource.name
         print error
         pass
-
-def perf_id(perf_dict, counter_name):
-    counter_key = perf_dict[counter_name]
-    return counter_key
-
 
 def DatastoreInformation(datastore,datacenter_name):
     try:
@@ -205,12 +203,13 @@ def run(host,user,pwd,port,interval):
                 if (ds.name in config.datastore_names) or (len(config.datastore_names) == 0):
                     DatastoreInformation(ds,datacenter_name)
 
-            if hasattr(datacenter.vmFolder, 'childEntity'):
+            if hasattr(datacenter.hostFolder, 'childEntity'):
                 hostFolder = datacenter.hostFolder
-                computeResourceList = hostFolder.childEntity
+                computeResourceList = []
+                computeResourceList = getComputeResource(hostFolder,computeResourceList)
                 for computeResource in computeResourceList:
                     ComputeResourceInformation(computeResource,datacenter_name,content,perf_dict,vchtime,interval)
-
+         
         if config.vm_enable == True:
             retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
             for vm in retProps:
@@ -220,12 +219,20 @@ def run(host,user,pwd,port,interval):
                         VmInfo(vm['moref'], content, vchtime, interval, perf_dict, tags)
                         add_data("vm.power",1,"GAUGE",tags)
                     else:
-                        add_data("vm.power",0,"GAUGE",tags) 
+                        add_data("vm.power",0,"GAUGE",tags)               
 
     except vmodl.MethodFault as error:
         print "Caught vmodl fault : " + error.msg
         return False, error.msg
     return True, "ok"
+
+def getComputeResource(Folder,computeResourceList):
+    if hasattr(Folder, 'childEntity'):
+        for computeResource in Folder.childEntity:
+           getComputeResource(computeResource,computeResourceList)
+    else:
+        computeResourceList.append(Folder)
+    return computeResourceList
 
 def hello_vcenter(vchost,username,password,port):
     try:
