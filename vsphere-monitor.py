@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 #coding=utf-8 
 
+"""
+Written by freedomkk-qfeng
+Github: https://github.com/freedomkk-qfeng
+Email: freedomkk_qfeng@qq.com
+Script to get vSphere metrics and push to Open-Falcon
+Version 0.2
+"""
+
 import atexit
 from pyVmomi import vim, vmodl
 from pyVim.connect import SmartConnectNoSSL, Disconnect
@@ -11,32 +19,6 @@ import time
 import json
 import config
 from datetime import timedelta
-
-def GetProperties(content, viewType, props, specType):
-    # Build a view and get basic properties for all Virtual Machines
-    objView = content.viewManager.CreateContainerView(content.rootFolder, viewType, True)
-    tSpec = vim.PropertyCollector.TraversalSpec(name='tSpecName', path='view', skip=False, type=vim.view.ContainerView)
-    pSpec = vim.PropertyCollector.PropertySpec(all=False, pathSet=props, type=specType)
-    oSpec = vim.PropertyCollector.ObjectSpec(obj=objView, selectSet=[tSpec], skip=False)
-    pfSpec = vim.PropertyCollector.FilterSpec(objectSet=[oSpec], propSet=[pSpec], reportMissingObjectsInResults=False)
-    retOptions = vim.PropertyCollector.RetrieveOptions()
-    totalProps = []
-    retProps = content.propertyCollector.RetrievePropertiesEx(specSet=[pfSpec], options=retOptions)
-    totalProps += retProps.objects
-    while retProps.token:
-        retProps = content.propertyCollector.ContinueRetrievePropertiesEx(token=retProps.token)
-        totalProps += retProps.objects
-    objView.Destroy()
-    # Turn the output in retProps into a usable dictionary of values
-    gpOutput = []
-    for eachProp in totalProps:
-        propDic = {}
-        for prop in eachProp.propSet:
-            propDic[prop.name] = prop.val
-        propDic['moref'] = eachProp.obj
-        gpOutput.append(propDic)
-    return gpOutput
-
 
 def VmInfo(vm,content,vchtime,interval,perf_dict,tags):
     try:
@@ -211,12 +193,12 @@ def run(host,user,pwd,port,interval):
                     ComputeResourceInformation(computeResource,datacenter_name,content,perf_dict,vchtime,interval)
          
         if config.vm_enable == True:
-            retProps = GetProperties(content, [vim.VirtualMachine], ['name', 'runtime.powerState'], vim.VirtualMachine)
-            for vm in retProps:
-                if (vm["name"] in config.vm_names) or (len(config.vm_names) == 0):
-                    tags = "vm=" + vm["name"]
-                    if vm['runtime.powerState'] == "poweredOn":
-                        VmInfo(vm['moref'], content, vchtime, interval, perf_dict, tags)
+            obj = content.viewManager.CreateContainerView(content.rootFolder, [vim.VirtualMachine], True)
+            for vm in obj.view:
+                if (vm.name in config.vm_names) or (len(config.vm_names) == 0):
+                    tags = "vm=" + vm.name
+                    if vm.runtime.powerState == "poweredOn":
+                        VmInfo(vm, content, vchtime, interval, perf_dict, tags)
                         add_data("vm.power",1,"GAUGE",tags)
                     else:
                         add_data("vm.power",0,"GAUGE",tags)               
